@@ -44,7 +44,6 @@ func NewContext[T any](ginCtx *gin.Context) *Context[T] {
 		isFile:  false,
 		startAt: time.Now(),
 	}
-
 }
 
 /*
@@ -149,6 +148,7 @@ func (c *Context[T]) OK(data any, page ...*gorm.Pagination) {
 
 	c.Response = &Response{
 		Success:    true,
+		TraceId:    c.TraceId,
 		Time:       time.Now().Format(time.RFC3339),
 		Duration:   time.Since(c.startAt).Milliseconds(),
 		Pagination: p,
@@ -215,6 +215,8 @@ func (c *Context[T]) Err(message string) {
 
 	c.Response = &Response{
 		Success:    false,
+		TraceId:    c.TraceId,
+		Time:       time.Now().Format(time.RFC3339),
 		Duration:   time.Since(c.startAt).Milliseconds(),
 		ErrMessage: message,
 	}
@@ -233,6 +235,8 @@ func (c *Context[T]) Unauthorized(message string) {
 
 	c.Response = &Response{
 		Success:    false,
+		TraceId:    c.TraceId,
+		Time:       time.Now().Format(time.RFC3339),
 		Duration:   time.Since(c.startAt).Milliseconds(),
 		ErrMessage: message,
 	}
@@ -251,6 +255,8 @@ func (c *Context[T]) Forbidden(message string) {
 
 	c.Response = &Response{
 		Success:    false,
+		TraceId:    c.TraceId,
+		Time:       time.Now().Format(time.RFC3339),
 		Duration:   time.Since(c.startAt).Milliseconds(),
 		ErrMessage: message,
 	}
@@ -269,6 +275,8 @@ func (c *Context[T]) InternalServerError(message string) {
 
 	c.Response = &Response{
 		Success:    false,
+		TraceId:    c.TraceId,
+		Time:       time.Now().Format(time.RFC3339),
 		Duration:   time.Since(c.startAt).Milliseconds(),
 		ErrMessage: message,
 	}
