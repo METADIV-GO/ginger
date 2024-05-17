@@ -117,6 +117,7 @@ GenerateTypescript generates typescript.
 func (e *engine) GenerateTypescript() {
 	FileService.RemoveOldFiles()
 	FileService.CreateFolder()
+	ModelService.GenerateGeneral()
 	ModelService.CreateModels()
 	ApiService.CreateApis()
 }

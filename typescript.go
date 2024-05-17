@@ -31,7 +31,7 @@ var ModelService = new(modelService)
 
 type modelService struct{}
 
-func (s *modelService) GenerateGeneralModules() {
+func (s *modelService) GenerateGeneral() {
 	os.WriteFile("./apis/general.ts", []byte(`
 export interface ErrorResp {
 	code: string;
@@ -52,7 +52,6 @@ func (s *modelService) CreateModels() {
 	convertor.CreateInterface = true
 	convertor.BackupDir = ""
 	convertor.ManageType(time.Time{}, typescriptify.TypeOptions{TSType: "Date", TSTransform: "new Date(__VALUE__)"})
-	convertor.Add(Response{})
 
 	for i := range Engine.ApiHandlers {
 		if Engine.ApiHandlers[i].Opts == nil || Engine.ApiHandlers[i].Opts.Typescript == nil {
@@ -163,7 +162,7 @@ func (s *apiService) CreateApis() {
 	}
 
 	page := "import axios, { AxiosResponse } from 'axios';\n"
-	page += "import { Response } from './models';\n"
+	page += "import { Response } from './general';\n"
 	for model := range apiInfo.Imports {
 		page += "import { " + model + " } from './models';\n"
 	}
