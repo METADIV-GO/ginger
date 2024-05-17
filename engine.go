@@ -32,6 +32,9 @@ type engine struct {
 	EnvironmentKeys []string     `json:"environment_keys"`
 	Configs         engineConfig `json:"configs"`
 
+	DBMigrate  []any `json:"db_migrate"`
+	MemMigrate []any `json:"mem_migrate"`
+
 	ApiHandlers  []ApiHandler        `json:"api_handlers"`
 	WsHandlers   []WsHandler         `json:"ws_handlers"`
 	CronHandlers []CornHandler       `json:"cron_handlers"`
@@ -52,6 +55,8 @@ func newEngine() *engine {
 		CronHandlers: make([]CornHandler, 0),
 		InitJobs:     make([]InitJobHandler, 0),
 		Middlewares:  make([]MiddlewareHandler, 0),
+		DBMigrate:    make([]any, 0),
+		MemMigrate:   make([]any, 0),
 		EnvironmentKeys: []string{
 			"GIN_MODE",
 			"GIN_HOST",
@@ -165,6 +170,27 @@ func (e *engine) setupDB() {
 			panic(err)
 		}
 	}
+
+	switch e.Configs.MEMType {
+	case DB_TYPE_MYSQL:
+		e.MEM, err = conn.QuickMySQL(silent)
+		if err != nil {
+			panic(err)
+		}
+	case DB_TYPE_PGSQL:
+		e.MEM, err = conn.QuickPostgreSQL(silent)
+		if err != nil {
+			panic(err)
+		}
+	case DB_TYPE_MEM:
+		e.MEM, err = conn.SqliteMem(silent)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	e.DB.AutoMigrate(e.DBMigrate...)
+	e.MEM.AutoMigrate(e.MemMigrate...)
 }
 
 func (e *engine) setupCors() {
