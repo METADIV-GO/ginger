@@ -52,6 +52,7 @@ func (s *modelService) CreateModels() {
 	convertor.CreateInterface = true
 	convertor.BackupDir = ""
 	convertor.ManageType(time.Time{}, typescriptify.TypeOptions{TSType: "Date", TSTransform: "new Date(__VALUE__)"})
+	convertor.Add(Response{})
 
 	for i := range Engine.ApiHandlers {
 		if Engine.ApiHandlers[i].Opts == nil || Engine.ApiHandlers[i].Opts.Typescript == nil {
@@ -162,7 +163,7 @@ func (s *apiService) CreateApis() {
 	}
 
 	page := "import axios, { AxiosResponse } from 'axios';\n"
-	page += "import { Response } from '../general';\n"
+	page += "import { Response } from './models';\n"
 	for model := range apiInfo.Imports {
 		page += "import { " + model + " } from './models';\n"
 	}
