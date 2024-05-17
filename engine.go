@@ -195,15 +195,15 @@ func (e *engine) setupDB() {
 
 func (e *engine) setupCors() {
 	allowOrigins := strings.Split(Env("CORS_ALLOW_ORIGINS"), ",")
-	if len(allowOrigins) == 0 {
+	if len(allowOrigins) == 0 || allowOrigins[0] == "" {
 		allowOrigins = []string{"*"}
 	}
 	allowMethods := strings.Split(Env("CORS_ALLOW_METHODS"), ",")
-	if len(allowMethods) == 0 {
+	if len(allowMethods) == 0 || allowMethods[0] == "" {
 		allowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH"}
 	}
 	allowHeaders := strings.Split(Env("CORS_ALLOW_HEADERS"), ",")
-	if len(allowHeaders) == 0 {
+	if len(allowHeaders) == 0 || allowHeaders[0] == "" {
 		allowHeaders = []string{"Origin", "Authorization", "Content-Type", HEADER_X_LOCALE, HEADER_AUTHORIZATION}
 	}
 
